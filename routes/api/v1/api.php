@@ -24,4 +24,5 @@ Route::prefix('/user')->group( function(){
     Route::post('/login', [LoginController::class,'login'])->name("login");
     Route::middleware('auth:api')->get('/current', [UserController::class,'currentUser'])->name("currentUser");
     Route::post('/createUser', [UserController::class,'createUser'])->name("createUser");
+    Route::middleware('auth:api')->post('/update-user', [UserController::class,'updateUser'])->name("updateUser");
 });
