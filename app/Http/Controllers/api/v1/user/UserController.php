@@ -12,10 +12,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Jobs\PutFile;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
+    protected $user;
+    public function __construct()
+    {
+        $this->user = [
+            'name' => 'name132',
+            'password' => 'pw'
+        ];
+    }
 
     public function currentUser()
     {
@@ -63,46 +71,60 @@ class UserController extends Controller
     public function updateUser(Request $request)
     {
         $validator = null;
-            // $validator = Validator::make($request->all(), [
-            //     'fullname' => 'required|string',
-            //     'username' => 'required|string',
-            //     'email' => 'required|string',
-            //     'avatar' => 'required|mimetypes:image/jpeg,image/png|max:4096'
-            // ]);
-
-            try {
-                
-
-                $nameFile = Hash::make($request->avatar->getClientOriginalName());
-                $nameExtension = $request->avatar->getClientOriginalExtension();
-        
-                Storage::disk('google')->put($nameFile . '.' . $nameExtension, file_get_contents($request->avatar));
-                $details = Storage::disk("google")->getMetadata($nameFile . '.' . $nameExtension);
-                
-                DB::beginTransaction();
-                Auth::user()->where('username', $request->username)->update([
-                    'fullname' => $request->fullname,
-                    'email' => $request->email,
-                    'avatar' => $details['path']
+        try {
+            if($request->has('avatar')){
+                $validator = Validator::make($request->all(), [
+                    'fullname' => 'required|string',
+                    'username' => 'required|string',
+                    'email' => 'required|string',
+                    'avatar' => 'required|mimetypes:image/jpeg,image/png|max:6000'
                 ]);
-                
-
-
-                // $request->avatar->storeAs('/', $nameFile . '.' . $nameExtension, 'public');
-                // Artisan::call('cache:clear');
-                // PutFile::dispatch($nameFile . '.' . $nameExtension);
-                // Artisan::call('queue:work --stop-when-empty', []);
-
-
-                // Storage::disk('google')->put($nameFile . '.' . $nameExtension, file_get_contents($request->avatar));
-                // $details = Storage::disk("google")->getMetadata($nameFile . '.' . $nameExtension);
-                DB::commit();
-
-                return response(['message' => $details], 200);
-            } catch (Exception $exx) {
-                DB::rollBack();
-                return response(['message' => $exx], 400);
+                try {
+                    $nameFile = md5($request->avatar->getClientOriginalName());
+    
+                    if (Auth::user()->username == $request->username) {
+                        $request->avatar->storeAs('/', $nameFile, 'public');
+    
+                        $temp = [];
+                        foreach ($request->all() as $key => $item) {
+                            $temp[$key] = $item;
+                        }
+                        $temp['avatar'] = $nameFile;
+                        Artisan::call('cache:clear');
+                        PutFile::dispatch($temp);
+                        Artisan::call('queue:work --stop-when-empty', []);
+                        // Nếu mình dùng queue:work ở terminal luôn thì nó sẽ cache những job mà mình đã từng thực hiện, nên nếu 
+                        // cùng đẩy lên 1 cái ảnh với cùng tên và cùng file đó thì nó sẽ overwrite lại file trên Google Drive
+                        // chứ không tạo mới 1 file như cách bên trên
+                        return response(['avatar' => 'success'], 200);
+                    }
+                    return response(['message' => 'Permission denied'], 403);
+                } catch (Exception $exx) {
+                    return response(['message' => $exx], 400);
+                }
+            }else{
+                $validator = Validator::make($request->all(), [
+                    'fullname' => 'required|string',
+                    'username' => 'required|string',
+                    'email' => 'required|string',
+                ]);
+                try {
+    
+                    if (Auth::user()->username == $request->username) {
+                        User::where('username', $request->username)->update([
+                            'fullname' => $request->fullname,
+                            'email' => $request->email,
+                        ]);
+                        return response(['avatar' => 'success'], 200);
+                    }
+                    return response(['message' => 'Permission denied'], 403);
+                } catch (Exception $exx) {
+                    return response(['message' => $exx], 400);
+                }
             }
-    }
 
+        } catch (Exception $exc) {
+            return response(['message' => $validator->fails()]);
+        }
+    }
 }
