@@ -16,18 +16,9 @@ use Illuminate\Support\Facades\Artisan;
 class UserController extends Controller
 {
 
-    protected $user;
-    public function __construct()
-    {
-        $this->user = [
-            'name' => 'name132',
-            'password' => 'pw'
-        ];
-    }
-
     public function currentUser()
     {
-        return Auth::user();
+        return response(['user' => Auth::user()], 200);
     }
 
     public function createUser(Request $request)

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\v1\LoginController;
+use App\Http\Controllers\api\v1\PublicChatController;
 use App\Http\Controllers\api\v1\user\UserController;
 
 /*
@@ -21,8 +22,12 @@ use App\Http\Controllers\api\v1\user\UserController;
 // });
 
 Route::prefix('/user')->group( function(){
-    Route::post('/login', [LoginController::class,'login'])->name("login");
-    Route::middleware('auth:api')->get('/current', [UserController::class,'currentUser'])->name("currentUser");
-    Route::post('/createUser', [UserController::class,'createUser'])->name("createUser");
-    Route::middleware('auth:api')->post('/update-user', [UserController::class,'updateUser'])->name("updateUser");
+    Route::post('/login', [LoginController::class,'login']);
+    Route::middleware('auth:api')->get('/current', [UserController::class,'currentUser']);
+    Route::post('/createUser', [UserController::class,'createUser']);
+    Route::middleware('auth:api')->post('/update-user', [UserController::class,'updateUser']);
+});
+Route::prefix('/public-chat')->group( function(){
+    Route::get('/messages', [PublicChatController::class,'fetchMessages']);
+    Route::middleware('auth:api')->post('/messages', [PublicChatController::class,'sendMessages']);
 });
