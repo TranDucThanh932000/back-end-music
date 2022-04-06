@@ -20,3 +20,12 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('lchat', function ($user) {
     return true;
 });
+
+
+Broadcast::channel('join-chat', function ($user) {
+    if(auth()->check()){
+        return $user;
+    }else{
+        return true;
+    }
+});
