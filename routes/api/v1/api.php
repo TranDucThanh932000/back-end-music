@@ -28,6 +28,6 @@ Route::prefix('/user')->group( function(){
     Route::middleware('auth:api')->post('/update-user', [UserController::class,'updateUser']);
 });
 Route::prefix('/public-chat')->group( function(){
-    Route::get('/messages', [PublicChatController::class,'fetchMessages']);
+    Route::get('/messages/{room_id}', [PublicChatController::class,'fetchMessages']);
     Route::middleware('auth:api')->post('/messages', [PublicChatController::class,'sendMessages']);
 });

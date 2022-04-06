@@ -13,13 +13,22 @@ class PublicChatController extends Controller
 {
     public function fetchMessages(Request $request){
         // $arrayMess = Message::with('user')->orderBy('created_at', 'desc')->take(10)->get();
-        $arrayMess = Message::select('user_id','message','messages.created_at','users.fullname','users.avatar')->join('users','users.id','=','messages.user_id')->orderBy('messages.created_at', 'desc')->take(10)->get();
-        return response(['message' => $arrayMess], 200);
+        $arrayMess = Message::select('user_id','message','messages.created_at','users.fullname','users.avatar')
+        ->join('users','users.id','=','messages.user_id')
+        ->where('room_id', $request->room_id)
+        ->orderBy('messages.created_at', 'desc')
+        ->take(10)->get();
+        return response(['messages' => $arrayMess], 200);
     }
 
     public function sendMessages(Request $request){
         $userAuth = auth()->user();
-        $message = $userAuth->messages()->create(['message' => $request->message]);
+        $message = $userAuth->messages()->create(
+            [
+                'message' => $request->message,
+                'room_id' => $request->room_id
+            ]
+        );
 
         Artisan::call('cache:clear');
         broadcast(new MessageSent($userAuth, $message->load('user')))->toOthers();
