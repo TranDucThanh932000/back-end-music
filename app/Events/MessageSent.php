@@ -18,15 +18,17 @@ class MessageSent implements ShouldBroadcast
 
     public $user;
     public $message;
-    public function __construct(User $user, Message $message)
+    public $room_id;
+    public function __construct(User $user, Message $message, $room_id)
     {
         $this->user = $user;
         $this->message = $message;
+        $this->room_id = $room_id;
     }
 
     public function broadcastOn()
     {
-        return new PrivateChannel('lchat');
+        return new PrivateChannel('chat-' . $this->room_id);
     }
 
     

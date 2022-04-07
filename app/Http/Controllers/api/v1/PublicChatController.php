@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use App\Events\MessageSent;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
+use App\Models\RoomChat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -31,8 +32,12 @@ class PublicChatController extends Controller
         );
 
         Artisan::call('cache:clear');
-        broadcast(new MessageSent($userAuth, $message->load('user')))->toOthers();
+        broadcast(new MessageSent($userAuth, $message->load('user'), $request->room_id))->toOthers();
         Artisan::call('queue:work --stop-when-empty', []);
         return response(['message' => $message], 200);
+    }
+
+    public function getRoomChat(Request $request){
+        return response(['room' => RoomChat::find($request->room_id)], 200);
     }
 }

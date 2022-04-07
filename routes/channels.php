@@ -17,16 +17,22 @@ use Illuminate\Support\Facades\Broadcast;
 //     return (int) $user->id === (int) $id;
 // });
 
-//cổng này để nhận tin nhắn và bắt sự kiện nhập phím
-Broadcast::channel('lchat', function ($user) {
-    return true;
-});
-
-//kiểm soát lượng ra vào
-Broadcast::channel('join-chat', function ($user) {
+//cổng này để nhận tin nhắn, bắt sự kiện nhập phím và lượng ra vào
+Broadcast::channel('chat-1', function ($user) {
     if(auth()->check()){
         return $user;
     }else{
         return true;
     }
 });
+
+Broadcast::channel('chat-2', function ($user) {
+    if(auth()->check()){
+        return $user;
+    }else{
+        return true;
+    }
+});
+
+
+

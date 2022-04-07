@@ -30,4 +30,5 @@ Route::prefix('/user')->group( function(){
 Route::prefix('/public-chat')->group( function(){
     Route::get('/messages/{room_id}', [PublicChatController::class,'fetchMessages']);
     Route::middleware('auth:api')->post('/messages', [PublicChatController::class,'sendMessages']);
+    Route::get('/room-chat/{room_id}', [PublicChatController::class,'getRoomChat']);
 });
