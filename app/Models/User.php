@@ -8,10 +8,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Models\Message;
+use App\Models\Singer;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, CascadeSoftDeletes;
+
+    protected $table = 'users';
 
     protected $fillable = [
         'fullname',
@@ -20,6 +25,8 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+    protected $softDelete = ['deleted_at'];
+    protected $cascadeDeletes = ['singers', 'composers'];
 
     protected $hidden = [
         'password',
@@ -27,7 +34,15 @@ class User extends Authenticatable
     ];
 
     public function messages(){
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class,'user_id');
+    }
+
+    public function singers(){
+        return $this->hasMany(Singer::class, 'user_id');
+    }
+
+    public function composers(){
+        return $this->hasMany(Composer::class, 'user_id');
     }
 
     protected $casts = [
