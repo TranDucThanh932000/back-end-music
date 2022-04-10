@@ -9,6 +9,7 @@ use App\Http\Controllers\api\v1\user\SingerController;
 use App\Http\Controllers\api\v1\user\ComposerController;
 use App\Http\Controllers\api\v1\SongController;
 use App\Http\Controllers\api\v1\AlbumController;
+use App\Http\Controllers\api\v1\GenreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,14 +45,20 @@ Route::prefix('/user')->group( function(){
 });
 
 Route::prefix('/song')->group(function(){
+    Route::get('/get-all-song', [SongController::class,'getAllSong']);
     Route::get('/{song_id}', [SongController::class,'getSong']);
     Route::post('/store', [SongController::class,'createSong']);
 });
 
 Route::prefix('/album')->group(function(){
+    Route::get('/get-all-album', [AlbumController::class,'getAllAlbum']);
     Route::get('/{album_id}', [AlbumController::class,'getAlbum']);
     Route::get('/{album_id}/songs', [AlbumController::class,'getAlbumSongs']);
     Route::get('/{album_id}/singers', [AlbumController::class,'getAlbumSingers']);
+});
+
+Route::prefix('/genre')->group(function(){
+    Route::get('/get-all-genre', [GenreController::class,'getAllGenre']);
 });
 
 Route::prefix('/public-chat')->group( function(){

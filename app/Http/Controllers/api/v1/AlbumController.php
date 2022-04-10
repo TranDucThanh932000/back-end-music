@@ -10,6 +10,11 @@ use App\Models\Song;
 
 class AlbumController extends Controller
 {
+
+    public function getAllAlbum(){
+        return response([ 'albums' => Album::all() ], 200);
+    }
+
     public function getAlbum(Request $request){
         return response(['album' => Album::find($request->album_id)], 200);
     }
