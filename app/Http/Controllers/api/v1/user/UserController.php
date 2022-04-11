@@ -11,10 +11,39 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Jobs\PutFile;
+use App\Models\Composer;
+use App\Models\Singer;
 use Illuminate\Support\Facades\Artisan;
 
 class UserController extends Controller
 {
+
+    public function getAllUser(){
+        return response(['users' => User::all(), 200]);
+    }
+
+    public function setupAccount(Request $request){
+        try{
+            DB::beginTransaction();
+            if($request->chbSinger){
+                Singer::create([
+                    'user_id' => $request->userId,
+                    'nickname' => $request->nicknameSinger
+                ]);
+            }
+            if($request->chbComposer){
+                Composer::create([
+                    'user_id' => $request->userId,
+                    'nickname' => $request->nicknameComposer
+                ]);
+            }
+            DB::commit();
+            return response(['status' => 'success', 200]);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response(['status' => $e, 200]);
+        }
+    }
 
     public function currentUser()
     {

@@ -31,6 +31,8 @@ Route::prefix('/user')->group( function(){
     Route::middleware('auth:api')->get('/current', [UserController::class,'currentUser']);
     Route::post('/createUser', [UserController::class,'createUser']);
     Route::middleware('auth:api')->post('/update-user', [UserController::class,'updateUser']);
+    Route::get('/get-all-user', [UserController::class,'getAllUser']);
+    Route::post('/setup-account', [UserController::class,'setupAccount']);
     Route::prefix('/singer')->group(function(){
         Route::get('/get-all-singer', [SingerController::class,'getAllSinger']);
         Route::get('/{singer_id}', [SingerController::class,'getSinger']);
@@ -45,16 +47,21 @@ Route::prefix('/user')->group( function(){
 });
 
 Route::prefix('/song')->group(function(){
+    Route::get('/get-full-infor-song/{song_id}', [SongController::class,'getFullInforSong']);
     Route::get('/get-all-song', [SongController::class,'getAllSong']);
     Route::get('/{song_id}', [SongController::class,'getSong']);
     Route::post('/store', [SongController::class,'createSong']);
+    Route::post('/store-edit', [SongController::class,'editSong']);
 });
 
 Route::prefix('/album')->group(function(){
     Route::get('/get-all-album', [AlbumController::class,'getAllAlbum']);
+    Route::get('/get-full-infor-album/{albumId}', [AlbumController::class,'getFullInforAlbum']);
     Route::get('/{album_id}', [AlbumController::class,'getAlbum']);
     Route::get('/{album_id}/songs', [AlbumController::class,'getAlbumSongs']);
     Route::get('/{album_id}/singers', [AlbumController::class,'getAlbumSingers']);
+    Route::post('/store', [AlbumController::class,'createAlbum']);
+    Route::post('/store-edit', [AlbumController::class,'editAlbum']);
 });
 
 Route::prefix('/genre')->group(function(){

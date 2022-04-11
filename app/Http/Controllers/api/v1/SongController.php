@@ -23,6 +23,21 @@ class SongController extends Controller
         return response(['song' => Song::find($request->song_id)], 200);
     }
 
+    public function getFullInforSong(Request $request){
+        $songFinded = Song::find($request->song_id);
+        $singers = $songFinded->songsingers()->get();
+        $composers = $songFinded->songcomposers()->get();
+        $genres = $songFinded->songgenres()->get();
+        $albums = $songFinded->songalbums()->get();
+        $song = [];
+        $song['singers'] = $singers;
+        $song['composers'] = $composers;
+        $song['genres'] = $genres;
+        $song['albums'] = $albums;
+        $song['songFinded'] = $songFinded;
+        return response(['song' => $song], 200);
+    }
+
     public function createSong(Request $request){
         try{
             DB::beginTransaction();
@@ -63,6 +78,37 @@ class SongController extends Controller
                         'song_id' => $song->id
                     ]);
                 }
+            }
+            DB::commit();
+            return response(['status' => 'success'], 200);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response(['status' => $e], 400);
+        }
+    }
+
+    public function editSong(Request $request){
+        try{
+            DB::beginTransaction();
+            $song = Song::find($request->songId);
+            $song->update([
+                'name' => $request->name,
+                'lyrics' => $request->lyrics,
+                'timeDuration' => $request->timeDuration,
+                'image' => $request->image,
+                'src' => $request->src,
+                'releaseDate' => $request->releaseDate
+            ]);
+            $arrComposer = $request->composers;
+            $arrSinger = $request->singers;
+            $arrGenre = $request->genres;
+            $song->songcomposers()->sync($arrComposer);
+            $song->songsingers()->sync($arrSinger);
+            $song->songgenres()->sync($arrGenre);
+            if(count($request->albums) != 0){
+                $song->songalbums()->sync($request->albums);
+            }else{
+                $song->songalbums()->detach();
             }
             DB::commit();
             return response(['status' => 'success'], 200);
