@@ -22,6 +22,22 @@ class UserController extends Controller
         return response(['users' => User::all(), 200]);
     }
 
+    public function getAlreadySingerComposer(Request $request){
+        $singer = Singer::where('user_id', $request->userId)->get();
+        $composer = Composer::where('user_id', $request->userId)->get();
+        $alreadySinger = false;
+        $alreadyComposer = false;
+        if(count($singer)){
+            $alreadySinger = true;
+        }
+        if(count($composer)){
+            $alreadyComposer = true;
+        }
+        $already['singer'] = $alreadySinger;
+        $already['composer'] = $alreadyComposer;
+        return response(['already' => $already]);
+    }
+
     public function setupAccount(Request $request){
         try{
             DB::beginTransaction();

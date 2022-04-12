@@ -32,6 +32,7 @@ Route::prefix('/user')->group( function(){
     Route::post('/createUser', [UserController::class,'createUser']);
     Route::middleware('auth:api')->post('/update-user', [UserController::class,'updateUser']);
     Route::get('/get-all-user', [UserController::class,'getAllUser']);
+    Route::get('/already-singer-composer/{userId}', [UserController::class,'getAlreadySingerComposer']);
     Route::post('/setup-account', [UserController::class,'setupAccount']);
     Route::prefix('/singer')->group(function(){
         Route::get('/get-all-singer', [SingerController::class,'getAllSinger']);
@@ -65,7 +66,10 @@ Route::prefix('/album')->group(function(){
 });
 
 Route::prefix('/genre')->group(function(){
+    Route::get('/get-full-infor-genre/{genreId}', [GenreController::class,'getFullInforGenre']);
     Route::get('/get-all-genre', [GenreController::class,'getAllGenre']);
+    Route::post('/store', [GenreController::class,'createGenre']);
+    Route::post('/store-edit', [GenreController::class,'editGenre']);
 });
 
 Route::prefix('/public-chat')->group( function(){
