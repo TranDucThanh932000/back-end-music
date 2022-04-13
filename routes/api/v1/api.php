@@ -10,6 +10,7 @@ use App\Http\Controllers\api\v1\user\ComposerController;
 use App\Http\Controllers\api\v1\SongController;
 use App\Http\Controllers\api\v1\AlbumController;
 use App\Http\Controllers\api\v1\GenreController;
+use App\Http\Controllers\api\v1\PlaylistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,8 +73,15 @@ Route::prefix('/genre')->group(function(){
     Route::post('/store-edit', [GenreController::class,'editGenre']);
 });
 
+Route::prefix('/play-list')->group( function(){
+    Route::get('/get-top-five-selected-today', [PlaylistController::class,'getTopFivePlaylist']);
+    Route::get('/{playlistId}', [PlaylistController::class,'getPlaylist']);
+});
+
+
 Route::prefix('/public-chat')->group( function(){
     Route::get('/messages/{room_id}', [PublicChatController::class,'fetchMessages']);
     Route::middleware('auth:api')->post('/messages', [PublicChatController::class,'sendMessages']);
     Route::get('/room-chat/{room_id}', [PublicChatController::class,'getRoomChat']);
 });
+
