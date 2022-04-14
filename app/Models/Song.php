@@ -13,7 +13,7 @@ use App\Models\Album;
 class Song extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['name','lyrics','timeDuration','image','src','releaseDate'];
+    protected $fillable = ['name','lyrics','timeDuration','image','src','releaseDate','view'];
     protected $softDelete = ['deleted_at'];
 
     public function songgenres(){

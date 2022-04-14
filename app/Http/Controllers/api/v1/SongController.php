@@ -117,4 +117,15 @@ class SongController extends Controller
             return response(['status' => $e], 400);
         }
     }
+
+    public function getTopThree(){
+        $top3 = Song::select('*')
+        ->orderBy('view', 'desc')
+        ->limit(3)
+        ->get();
+        for($i = 0; $i < 3; $i++){
+            $top3[$i]['singer'] = $top3[$i]->songsingers()->get(); 
+        }
+        return response([ 'top3' =>  $top3]);
+    }
 }

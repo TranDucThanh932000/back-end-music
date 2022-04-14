@@ -15,13 +15,25 @@ class PlaylistController extends Controller
         return response(['playlist' => $data], 200);
     }
 
-    public function getTopFivePlaylist(Request $request){
+    //selected today
+    public function getTopFivePlaylist(){
         $singers = [3, 4, 5, 6, 8];
         $topFivePlaylist = [];
         for($i = 0; $i < count($singers); $i++){
             $album = SingerAlbum::where('singer_id',$singers[$i])->first();
-            array_push($topFivePlaylist, Album::find($album->id));
+            array_push($topFivePlaylist, Album::find($album->album_id));
         }
         return response(['playlist' => $topFivePlaylist], 200);
+    }
+
+    //corner
+    public function getCornerPlaylist(){
+        $singers = [9, 8, 6, 3, 7];
+        $cornerPlaylist = [];
+        for($i = 0; $i < count($singers); $i++){
+            $album = SingerAlbum::where('singer_id', $singers[$i])->first();
+            array_push($cornerPlaylist, Album::find($album->album_id));
+        }
+        return response(['playlistCorner' => $cornerPlaylist], 200);
     }
 }

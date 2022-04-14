@@ -51,6 +51,7 @@ Route::prefix('/user')->group( function(){
 Route::prefix('/song')->group(function(){
     Route::get('/get-full-infor-song/{song_id}', [SongController::class,'getFullInforSong']);
     Route::get('/get-all-song', [SongController::class,'getAllSong']);
+    Route::get('/get-top3', [SongController::class,'getTopThree']);
     Route::get('/{song_id}', [SongController::class,'getSong']);
     Route::post('/store', [SongController::class,'createSong']);
     Route::post('/store-edit', [SongController::class,'editSong']);
@@ -73,7 +74,8 @@ Route::prefix('/genre')->group(function(){
     Route::post('/store-edit', [GenreController::class,'editGenre']);
 });
 
-Route::prefix('/play-list')->group( function(){
+Route::prefix('/playlist')->group( function(){
+    Route::get('/get-corner', [PlaylistController::class,'getCornerPlaylist']);
     Route::get('/get-top-five-selected-today', [PlaylistController::class,'getTopFivePlaylist']);
     Route::get('/{playlistId}', [PlaylistController::class,'getPlaylist']);
 });
@@ -83,5 +85,6 @@ Route::prefix('/public-chat')->group( function(){
     Route::get('/messages/{room_id}', [PublicChatController::class,'fetchMessages']);
     Route::middleware('auth:api')->post('/messages', [PublicChatController::class,'sendMessages']);
     Route::get('/room-chat/{room_id}', [PublicChatController::class,'getRoomChat']);
+    Route::get('/get-rooms', [PublicChatController::class,'getRooms']);
 });
 

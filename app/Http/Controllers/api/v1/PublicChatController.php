@@ -40,4 +40,14 @@ class PublicChatController extends Controller
     public function getRoomChat(Request $request){
         return response(['room' => RoomChat::find($request->room_id)], 200);
     }
+
+    public function getRooms(Request $request){
+        $room = [1, 2, 2, 1, 2, 1, 2, 1 , 1, 2, 1 ,1];
+        $rooms = [];
+        for($i = 0; $i < count($room); $i++){
+            $chat = RoomChat::find($room[$i]);
+            array_push($rooms, $chat);
+        }
+        return response(['rooms' => $rooms], 200);
+    }
 }
