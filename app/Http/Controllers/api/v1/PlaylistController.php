@@ -28,7 +28,7 @@ class PlaylistController extends Controller
 
     //corner
     public function getCornerPlaylist(){
-        $singers = [9, 8, 6, 3, 7];
+        $singers = [2, 8, 6, 3, 7];
         $cornerPlaylist = [];
         for($i = 0; $i < count($singers); $i++){
             $album = SingerAlbum::where('singer_id', $singers[$i])->first();
