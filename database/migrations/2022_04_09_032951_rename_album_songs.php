@@ -13,7 +13,7 @@ class RenameAlbumSongs extends Migration
      */
     public function up()
     {
-        Schema::rename('albumsongs', 'album_songs');
+        Schema::rename('AlbumSongs', 'album_songs');
     }
 
     /**
