@@ -13,7 +13,7 @@ class AddColumnViewSongsTable extends Migration
      */
     public function up()
     {
-        Schema::table('Songs', function (Blueprint $table) {
+        Schema::table('songs', function (Blueprint $table) {
             $table->integer('view')->after('releaseDate')->default(0);
         });
     }

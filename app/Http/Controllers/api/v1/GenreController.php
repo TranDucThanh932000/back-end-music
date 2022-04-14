@@ -26,7 +26,7 @@ class GenreController extends Controller
             return response([ 'status' => 'success' ], 200);
         }catch(Exception $e){
             DB::rollBack();
-            return response([ 'status' => $e ], 200);
+            return response([ 'status' => $e ], 400);
         }
     }
 
@@ -47,7 +47,7 @@ class GenreController extends Controller
             return response([ 'status' => 'success' ], 200);
         }catch(Exception $e){
             DB::rollBack();
-            return response([ 'status' => $e ], 200);
+            return response([ 'status' => $e ], 400);
         }
     }
 }

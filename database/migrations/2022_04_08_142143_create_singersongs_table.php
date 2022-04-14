@@ -18,7 +18,7 @@ class CreateSingersongsTable extends Migration
             $table->unsignedInteger('singer_id');
             $table->foreign('singer_id')->references('id')->on('singers');
             $table->unsignedInteger('song_id');
-            $table->foreign('song_id')->references('id')->on('Songs');
+            $table->foreign('song_id')->references('id')->on('songs');
             $table->timestamps();
             $table->softDeletes();
         });
