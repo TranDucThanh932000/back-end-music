@@ -45,6 +45,10 @@ class User extends Authenticatable
         return $this->hasMany(Composer::class, 'user_id');
     }
 
+    public function userSongs(){
+        return $this->belongsToMany(Song::class, 'playlists');
+    }
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];

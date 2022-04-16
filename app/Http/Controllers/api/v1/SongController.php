@@ -9,6 +9,8 @@ use App\Models\ComposerSong;
 use App\Models\GenreSong;
 use App\Models\SingerSong;
 use App\Models\Song;
+use App\Models\Album;
+use App\Models\Playlist;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -127,5 +129,15 @@ class SongController extends Controller
             $top3[$i]['singer'] = $top3[$i]->songsingers()->get(); 
         }
         return response([ 'top3' =>  $top3]);
+    }
+
+    public function getAllSongInAlbum(Request $request){
+        $songs = Album::find($request->albumId)->albumsongs()->get();
+        return response(['songs' => $songs], 200);
+    }
+
+    public function getAllSongInPlaylist(Request $request){
+        $songs = Playlist::find($request->playlistId)->playlistSongs()->get();
+        return response(['songs' => $songs], 200);
     }
 }

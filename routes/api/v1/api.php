@@ -51,6 +51,8 @@ Route::prefix('/user')->group( function(){
 Route::prefix('/song')->group(function(){
     Route::get('/get-full-infor-song/{song_id}', [SongController::class,'getFullInforSong']);
     Route::get('/get-all-song', [SongController::class,'getAllSong']);
+    Route::get('/get-all-song-album/{albumId}', [SongController::class,'getAllSongInAlbum']);
+    Route::get('/get-all-song-playlist/{playlistId}', [SongController::class,'getAllSongInPlaylist']);
     Route::get('/get-top3', [SongController::class,'getTopThree']);
     Route::get('/{song_id}', [SongController::class,'getSong']);
     Route::post('/store', [SongController::class,'createSong']);
@@ -77,6 +79,7 @@ Route::prefix('/genre')->group(function(){
 Route::prefix('/playlist')->group( function(){
     Route::get('/get-corner', [PlaylistController::class,'getCornerPlaylist']);
     Route::get('/get-top-five-selected-today', [PlaylistController::class,'getTopFivePlaylist']);
+    Route::get('/justnow', [PlaylistController::class,'getJustNow']);
     Route::get('/{playlistId}', [PlaylistController::class,'getPlaylist']);
 });
 

@@ -7,11 +7,22 @@ use App\Models\SingerAlbum;
 use Illuminate\Http\Request;
 use App\Models\Song;
 use App\Models\Album;
+use App\Models\Playlist;
 
 class PlaylistController extends Controller
 {
+
+    public function getJustNow(Request $request){
+        $listPlaylist = [1,2,3,4,5];
+        $data = [];
+        for($i = 0; $i < count($listPlaylist); $i++){
+            array_push($data, Playlist::find($listPlaylist[$i]));
+        }
+        return response(['playlist' => $data], 200);
+    }
+
     public function getPlaylist(Request $request){
-        $data = Song::find($request->playlistId);
+        $data = Playlist::find($request->playlistId)->playlistSongs()->get();
         return response(['playlist' => $data], 200);
     }
 
