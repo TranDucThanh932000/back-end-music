@@ -30,10 +30,17 @@ class PlaylistController extends Controller
     }
 
     public function getInforPlaylist(Request $request){
-        $playlist = Playlist::find($request->playlistId);
-        $data['name'] = $playlist->name;
-        $data['songs'] = $playlist->playlistSongs()->get();
-        return response(['data' => $data], 200);
+        $user = auth()->user();
+        $playlistOfUser = $user->playlists()->get();
+        for($i = 0; $i < count($playlistOfUser); $i++){
+            if($user->id == $playlistOfUser[$i]->user_id){
+                $playlist = Playlist::find($request->playlistId);
+                $data['name'] = $playlist->name;
+                $data['songs'] = $playlist->playlistSongs()->get();
+                return response(['data' => $data], 200);
+            }
+        }
+        return response(['data' => null], 401);
     }
 
     //selected today
@@ -64,9 +71,9 @@ class PlaylistController extends Controller
             DB::beginTransaction();
             $playlist = Playlist::create([
                 'name' => $request->name,
-                'image' => '1RIBMiKcguJobFN8uB5e2OvdH2GeP1TK9'
+                'image' => '1RIBMiKcguJobFN8uB5e2OvdH2GeP1TK9',
+                'user_id' => auth()->user()->id
             ]);
-            auth()->user()->userplaylists()->attach($playlist->id);
             $playlist->playlistsongs()->attach($listSongId);
             DB::commit();
             return response(['message' => 'success'], 200);
@@ -77,7 +84,27 @@ class PlaylistController extends Controller
     }
 
     public function getAllPlaylistUser(Request $request){
-        $playlists = auth()->user()->userplaylists()->get();
+        $playlists = auth()->user()->playlists()->get();
         return response(['playlists' => $playlists], 200);
+    }
+
+    public function updatePlaylist(Request $request){
+        try{
+            DB::beginTransaction();
+            $user = auth()->user();
+            $playlist = Playlist::find($request->playlistId);
+            if($user->id == $playlist->user_id){
+                $playlist->update([
+                    'name' => $request->name
+                ]);
+                $playlist->playlistsongs()->sync($request->listSongId);
+                DB::commit();
+                return response(['message' => 'success'], 200);
+            }
+            return response(['message' => null], 401);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response(['message' => null], 401);
+        }
     }
 }

@@ -81,9 +81,10 @@ Route::prefix('/playlist')->group( function(){
     Route::get('/get-corner', [PlaylistController::class,'getCornerPlaylist']);
     Route::middleware('auth:api')->get('/get-all-playlist-user', [PlaylistController::class,'getAllPlaylistUser']);
     Route::get('/get-top-five-selected-today', [PlaylistController::class,'getTopFivePlaylist']);
-    Route::get('/get-infor-playlist/{playlistId}', [PlaylistController::class,'getInforPlaylist']);
+    Route::middleware('auth:api')->get('/get-infor-playlist/{playlistId}', [PlaylistController::class,'getInforPlaylist']);
     Route::get('/justnow', [PlaylistController::class,'getJustNow']);
     Route::get('/{playlistId}', [PlaylistController::class,'getPlaylist']);
+    Route::middleware('auth:api')->post('/update', [PlaylistController::class,'updatePlaylist']);
     Route::middleware('auth:api')->post('/store', [PlaylistController::class,'createPlaylist']);
 });
 

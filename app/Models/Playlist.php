@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Playlist extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['name', 'image'];
+    protected $fillable = ['name', 'image', 'user_id'];
     protected $softDelete = ['deleted_at'];
 
     public function playlistsongs(){

@@ -46,8 +46,8 @@ class User extends Authenticatable
         return $this->hasMany(Composer::class, 'user_id');
     }
 
-    public function userplaylists(){
-        return $this->belongsToMany(Playlist::class, 'user_playlists');
+    public function playlists(){
+        return $this->hasMany(Playlist::class, 'user_id');
     }
 
     protected $casts = [
