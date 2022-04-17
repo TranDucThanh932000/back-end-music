@@ -87,6 +87,7 @@ Route::prefix('/playlist')->group( function(){
     Route::middleware('auth:api')->post('/update', [PlaylistController::class,'updatePlaylist']);
     Route::middleware('auth:api')->post('/store', [PlaylistController::class,'createPlaylist']);
 });
+ 
 
 
 Route::prefix('/public-chat')->group( function(){
