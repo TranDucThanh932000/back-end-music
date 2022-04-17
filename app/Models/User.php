@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Models\Message;
 use App\Models\Singer;
+use App\Models\Playlist;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 
@@ -45,8 +46,8 @@ class User extends Authenticatable
         return $this->hasMany(Composer::class, 'user_id');
     }
 
-    public function userSongs(){
-        return $this->belongsToMany(Song::class, 'playlists');
+    public function userplaylists(){
+        return $this->belongsToMany(Playlist::class, 'user_playlists');
     }
 
     protected $casts = [

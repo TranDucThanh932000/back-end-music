@@ -13,15 +13,15 @@ class CreateUserPlaylistsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_playlists', function (Blueprint $table) {
-            $table->increments('id');
-            $table->bigInteger('user_id')->unsigned()->index();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedInteger('playlist_id');
-            $table->foreign('playlist_id')->references('id')->on('playlists');
-            $table->timestamps();
-            $table->softDeletes();
-        });
+        // Schema::create('user_playlists', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->bigInteger('user_id')->unsigned()->index();
+        //     $table->foreign('user_id')->references('id')->on('users');
+        //     $table->unsignedInteger('playlist_id');
+        //     $table->foreign('playlist_id')->references('id')->on('playlists');
+        //     $table->timestamps();
+        //     $table->softDeletes();
+        // });
     }
 
     /**

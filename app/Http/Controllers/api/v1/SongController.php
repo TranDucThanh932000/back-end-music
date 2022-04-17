@@ -140,4 +140,12 @@ class SongController extends Controller
         $songs = Playlist::find($request->playlistId)->playlistSongs()->get();
         return response(['songs' => $songs], 200);
     }
+
+    public function getSongByTxtSearch(Request $request){
+        $songs = Song::where('name', 'Like', "%{$request->txtSearch}%")
+        ->orderBy('view','desc')
+        ->limit(3)
+        ->get();
+        return response(['songs' => $songs], 200);
+    }
 }

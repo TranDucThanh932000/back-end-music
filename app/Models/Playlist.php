@@ -12,7 +12,7 @@ class Playlist extends Model
     protected $fillable = ['name', 'image'];
     protected $softDelete = ['deleted_at'];
 
-    public function playlistSongs(){
+    public function playlistsongs(){
         return $this->belongsToMany(Song::class, 'playlist_songs');
     }
 }
