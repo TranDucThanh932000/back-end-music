@@ -10,6 +10,7 @@ use Laravel\Passport\HasApiTokens;
 use App\Models\Message;
 use App\Models\Singer;
 use App\Models\Playlist;
+use App\Models\Justnow;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 
@@ -48,6 +49,10 @@ class User extends Authenticatable
 
     public function playlists(){
         return $this->hasMany(Playlist::class, 'user_id');
+    }
+
+    public function justnows(){
+        return $this->hasMany(Justnow::class, 'user_id');
     }
 
     protected $casts = [

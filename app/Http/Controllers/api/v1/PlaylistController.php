@@ -7,6 +7,7 @@ use App\Models\SingerAlbum;
 use Illuminate\Http\Request;
 use App\Models\Song;
 use App\Models\Album;
+use App\Models\Justnow;
 use App\Models\Playlist;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -16,10 +17,19 @@ class PlaylistController extends Controller
 {
 
     public function getJustNow(Request $request){
-        $listPlaylist = [1,2,3,4,5];
+        $user = auth()->user();
+        $justnow = $user->justnows()->orderBy('created_at', 'desc')->limit(5)->get();
         $data = [];
-        for($i = 0; $i < count($listPlaylist); $i++){
-            array_push($data, Playlist::find($listPlaylist[$i]));
+        for($i = 0; $i < count($justnow); $i++){
+            if($justnow[$i]->type == 'album'){
+                $album = Album::find($justnow[$i]->link);
+                $album->link = "/album/" . $album->id;
+                array_push($data, $album);
+            }else{
+                $playlist = Playlist::find($justnow[$i]->link);
+                $playlist->link = "/playlist/" . $playlist->id;
+                array_push($data, $playlist);
+            }
         }
         return response(['playlist' => $data], 200);
     }
@@ -56,7 +66,7 @@ class PlaylistController extends Controller
 
     //corner
     public function getCornerPlaylist(){
-        $singers = [2, 8, 6, 3, 7];
+        $singers = [4, 8, 6, 3, 7];
         $cornerPlaylist = [];
         for($i = 0; $i < count($singers); $i++){
             $album = SingerAlbum::where('singer_id', $singers[$i])->first();
@@ -107,4 +117,5 @@ class PlaylistController extends Controller
             return response(['message' => null], 401);
         }
     }
+
 }

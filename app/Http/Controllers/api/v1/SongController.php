@@ -10,6 +10,7 @@ use App\Models\GenreSong;
 use App\Models\SingerSong;
 use App\Models\Song;
 use App\Models\Album;
+use App\Models\Genre;
 use App\Models\Playlist;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -131,6 +132,38 @@ class SongController extends Controller
         return response([ 'top3' =>  $top3]);
     }
 
+    public function getTop100(){
+        $top100 = Song::select('*')
+        ->orderBy('view', 'desc')
+        ->limit(100)
+        ->get();
+        for($i = 0; $i < count($top100); $i++){
+            $top100[$i]['singer'] = $top100[$i]->songsingers()->get(); 
+        }
+        return response([ 'songs' =>  $top100]);
+    }
+
+    public function getTop5AllGenre(){
+        $songsVN = Genre::find(2)->genresongs()->orderBy('view', 'desc')->limit(5)->get();
+        for($i = 0; $i < count($songsVN); $i++){
+            $songsVN[$i]['singer'] = $songsVN[$i]->songsingers()->get(); 
+        }
+
+        $songsUsuk = Genre::find(4)->genresongs()->orderBy('view', 'desc')->limit(5)->get();
+        for($i = 0; $i < count($songsUsuk); $i++){
+            $songsUsuk[$i]['singer'] = $songsUsuk[$i]->songsingers()->get(); 
+        }
+
+        $songsKpop = Genre::find(3)->genresongs()->orderBy('view', 'desc')->limit(5)->get();
+        for($i = 0; $i < count($songsKpop); $i++){
+            $songsKpop[$i]['singer'] = $songsKpop[$i]->songsingers()->get(); 
+        }
+        $songs['vietnam'] = $songsVN;
+        $songs['usuk'] = $songsUsuk;
+        $songs['kpop'] = $songsKpop;
+        return response(['songs' => $songs], 200);
+    }
+
     public function getAllSongInAlbum(Request $request){
         $songs = Album::find($request->albumId)->albumsongs()->get();
         return response(['songs' => $songs], 200);
@@ -147,5 +180,30 @@ class SongController extends Controller
         ->limit(3)
         ->get();
         return response(['songs' => $songs], 200);
+    }
+
+    public function getTopNewSongs(){
+        $top100 = Song::select('*')
+        ->orderBy('releaseDate', 'desc')
+        ->limit(100)
+        ->get();
+        for($i = 0; $i < count($top100); $i++){
+            $top100[$i]['singer'] = $top100[$i]->songsingers()->get(); 
+        }
+        return response([ 'songs' =>  $top100]);
+    }
+
+    public function getSongPlaylistUser(){
+        $user = auth()->user();
+        $playlist = $user->playlists()->first();
+        if($playlist){
+            $songs = $playlist->playlistsongs()->get();
+            for($i = 0; $i < count($songs); $i++){
+                $songs[$i]['singer'] = $songs[$i]->songsingers()->get(); 
+            }
+            return response(['songs' => $songs], 200);
+        }else{
+            return response(['songs' => []], 200);
+        }
     }
 }

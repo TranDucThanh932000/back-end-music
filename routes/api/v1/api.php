@@ -54,7 +54,11 @@ Route::prefix('/song')->group(function(){
     Route::get('/get-all-song-album/{albumId}', [SongController::class,'getAllSongInAlbum']);
     Route::get('/get-all-song-playlist/{playlistId}', [SongController::class,'getAllSongInPlaylist']);
     Route::get('/get-top3', [SongController::class,'getTopThree']);
+    Route::get('/get-top100', [SongController::class,'getTop100']);
+    Route::get('/get-top5-all-genre', [SongController::class,'getTop5AllGenre']);
+    Route::get('/get-top-new-songs', [SongController::class,'getTopNewSongs']);
     Route::get('/search/{txtSearch}', [SongController::class,'getSongByTxtSearch']);
+    Route::middleware('auth:api')->get('/get-songs-playlist-user', [SongController::class,'getSongPlaylistUser']);
     Route::get('/{song_id}', [SongController::class,'getSong']);
     Route::post('/store', [SongController::class,'createSong']);
     Route::post('/store-edit', [SongController::class,'editSong']);
@@ -82,7 +86,7 @@ Route::prefix('/playlist')->group( function(){
     Route::middleware('auth:api')->get('/get-all-playlist-user', [PlaylistController::class,'getAllPlaylistUser']);
     Route::get('/get-top-five-selected-today', [PlaylistController::class,'getTopFivePlaylist']);
     Route::middleware('auth:api')->get('/get-infor-playlist/{playlistId}', [PlaylistController::class,'getInforPlaylist']);
-    Route::get('/justnow', [PlaylistController::class,'getJustNow']);
+    Route::middleware('auth:api')->get('/justnow', [PlaylistController::class,'getJustNow']);
     Route::get('/{playlistId}', [PlaylistController::class,'getPlaylist']);
     Route::middleware('auth:api')->post('/update', [PlaylistController::class,'updatePlaylist']);
     Route::middleware('auth:api')->post('/store', [PlaylistController::class,'createPlaylist']);
