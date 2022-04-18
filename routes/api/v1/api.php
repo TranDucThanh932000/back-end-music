@@ -11,6 +11,7 @@ use App\Http\Controllers\api\v1\SongController;
 use App\Http\Controllers\api\v1\AlbumController;
 use App\Http\Controllers\api\v1\GenreController;
 use App\Http\Controllers\api\v1\PlaylistController;
+use App\Http\Controllers\api\v1\SlideController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,7 +93,13 @@ Route::prefix('/playlist')->group( function(){
     Route::middleware('auth:api')->post('/store', [PlaylistController::class,'createPlaylist']);
 });
  
-
+Route::prefix('/slide')->group(function(){
+    Route::get('/get-slide', [SlideController::class,'getSlide']);
+    Route::get('/get-full-infor-slide/{id} ', [SlideController::class,'getFullInforSlide']);
+    Route::get('/get-all-slide', [SlideController::class,'getAllSlide']);
+    Route::middleware('auth:api')->post('/store', [SlideController::class,'createSlide']);
+    Route::middleware('auth:api')->post('/store-edit', [SlideController::class,'updateSlide']);
+});
 
 Route::prefix('/public-chat')->group( function(){
     Route::get('/messages/{room_id}', [PublicChatController::class,'fetchMessages']);
