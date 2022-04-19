@@ -11,6 +11,7 @@ use App\Models\Message;
 use App\Models\Singer;
 use App\Models\Playlist;
 use App\Models\Justnow;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 
@@ -53,6 +54,21 @@ class User extends Authenticatable
 
     public function justnows(){
         return $this->hasMany(Justnow::class, 'user_id');
+    }
+
+    public function roles(){
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
+
+    public function checkPermissionAccess($permissionCheck){
+        $roles = auth()->user()->roles()->get();
+        foreach($roles as $role){
+            $permission = $role->rolepermissions()->get();
+            if($permission->contains('key_code', $permissionCheck)){
+                return true;
+            }
+        }
+        return false;
     }
 
     protected $casts = [

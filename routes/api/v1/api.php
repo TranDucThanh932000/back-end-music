@@ -30,12 +30,13 @@ use App\Http\Controllers\api\v1\SlideController;
 
 Route::prefix('/user')->group( function(){
     Route::post('/login', [LoginController::class,'login']);
+    Route::middleware('auth:api')->get('/checkRole', [UserController::class,'checkRole']);
     Route::middleware('auth:api')->get('/current', [UserController::class,'currentUser']);
     Route::post('/createUser', [UserController::class,'createUser']);
     Route::middleware('auth:api')->post('/update-user', [UserController::class,'updateUser']);
-    Route::get('/get-all-user', [UserController::class,'getAllUser']);
+    Route::middleware(['auth:api', 'can:list_user'])->get('/get-all-user', [UserController::class,'getAllUser']);
     Route::get('/already-singer-composer/{userId}', [UserController::class,'getAlreadySingerComposer']);
-    Route::post('/setup-account', [UserController::class,'setupAccount']);
+    Route::middleware(['auth:api', 'can:add_setup-account'])->post('/setup-account', [UserController::class,'setupAccount']);
     Route::prefix('/singer')->group(function(){
         Route::get('/get-all-singer', [SingerController::class,'getAllSinger']);
         Route::get('/{singer_id}', [SingerController::class,'getSinger']);
@@ -61,8 +62,8 @@ Route::prefix('/song')->group(function(){
     Route::get('/search/{txtSearch}', [SongController::class,'getSongByTxtSearch']);
     Route::middleware('auth:api')->get('/get-songs-playlist-user', [SongController::class,'getSongPlaylistUser']);
     Route::get('/{song_id}', [SongController::class,'getSong']);
-    Route::post('/store', [SongController::class,'createSong']);
-    Route::post('/store-edit', [SongController::class,'editSong']);
+    Route::post('/store', [SongController::class,'createSong'])->middleware(['auth:api', 'can:add_song']);
+    Route::post('/store-edit', [SongController::class,'editSong'])->middleware(['auth:api', 'can:edit_song']);
 });
 
 Route::prefix('/album')->group(function(){
@@ -71,19 +72,20 @@ Route::prefix('/album')->group(function(){
     Route::get('/{album_id}', [AlbumController::class,'getAlbum']);
     Route::get('/{album_id}/songs', [AlbumController::class,'getAlbumSongs']);
     Route::get('/{album_id}/singers', [AlbumController::class,'getAlbumSingers']);
-    Route::post('/store', [AlbumController::class,'createAlbum']);
-    Route::post('/store-edit', [AlbumController::class,'editAlbum']);
+    Route::post('/store', [AlbumController::class,'createAlbum'])->middleware(['auth:api', 'can:add_album']);;
+    Route::post('/store-edit', [AlbumController::class,'editAlbum'])->middleware(['auth:api', 'can:edit_album']);
 });
 
 Route::prefix('/genre')->group(function(){
     Route::get('/get-full-infor-genre/{genreId}', [GenreController::class,'getFullInforGenre']);
     Route::get('/get-all-genre', [GenreController::class,'getAllGenre']);
-    Route::post('/store', [GenreController::class,'createGenre']);
-    Route::post('/store-edit', [GenreController::class,'editGenre']);
+    Route::middleware(['auth:api', 'can:add_genre'])->post('/store', [GenreController::class,'createGenre']);
+    Route::middleware(['auth:api', 'can:edit_genre'])->post('/store-edit', [GenreController::class,'editGenre']);
 });
 
 Route::prefix('/playlist')->group( function(){
     Route::get('/get-corner', [PlaylistController::class,'getCornerPlaylist']);
+    Route::get('/get-all-new-playlist-in-month', [PlaylistController::class,'getAllNewPlaylistInMonth']);
     Route::middleware('auth:api')->get('/get-all-playlist-user', [PlaylistController::class,'getAllPlaylistUser']);
     Route::get('/get-top-five-selected-today', [PlaylistController::class,'getTopFivePlaylist']);
     Route::middleware('auth:api')->get('/get-infor-playlist/{playlistId}', [PlaylistController::class,'getInforPlaylist']);
@@ -97,8 +99,8 @@ Route::prefix('/slide')->group(function(){
     Route::get('/get-slide', [SlideController::class,'getSlide']);
     Route::get('/get-full-infor-slide/{id} ', [SlideController::class,'getFullInforSlide']);
     Route::get('/get-all-slide', [SlideController::class,'getAllSlide']);
-    Route::middleware('auth:api')->post('/store', [SlideController::class,'createSlide']);
-    Route::middleware('auth:api')->post('/store-edit', [SlideController::class,'updateSlide']);
+    Route::middleware(['auth:api', 'can:add_slide'])->post('/store', [SlideController::class,'createSlide']);
+    Route::middleware(['auth:api', 'can:edit_slide'])->post('/store-edit', [SlideController::class,'updateSlide']);
 });
 
 Route::prefix('/public-chat')->group( function(){

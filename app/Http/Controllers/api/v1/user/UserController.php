@@ -38,6 +38,14 @@ class UserController extends Controller
         return response(['already' => $already]);
     }
 
+    public function checkRole(){
+        $roles = auth()->user()->roles()->get();
+        if(count($roles) != 0){
+            return response(['checkRole' => true]);
+        }
+        return response(['checkRole' => false]);
+    }
+
     public function setupAccount(Request $request){
         try{
             DB::beginTransaction();

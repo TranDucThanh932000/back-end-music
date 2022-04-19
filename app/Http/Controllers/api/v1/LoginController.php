@@ -22,7 +22,17 @@ class LoginController extends Controller
 
         $accessToken = Auth::user()->createToken('authToken')->accessToken;
 
-        return response(['user' => Auth::user(), 'access_token' => $accessToken], 200);
+        $isMemberAdmin = false;
+        $roles = Auth::user()->roles()->get();
+        if(count($roles) != 0){
+            $isMemberAdmin = true;
+        }
+
+        return response([
+            'user' => Auth::user(),
+            'access_token' => $accessToken,
+            'isMemberAdmin' => $isMemberAdmin
+        ], 200);
     }
 
 }

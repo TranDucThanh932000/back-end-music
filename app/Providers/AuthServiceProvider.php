@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\PermissionGateAndPolicyAccess;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
@@ -25,6 +26,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        $permissionGateAndPolicy = new PermissionGateAndPolicyAccess();
+        $permissionGateAndPolicy->setGateAndPolicyAccess();
 
         // Passport::routes();
         if (! $this->app->routesAreCached()) {

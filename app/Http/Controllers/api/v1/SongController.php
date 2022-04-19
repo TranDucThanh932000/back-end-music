@@ -179,6 +179,9 @@ class SongController extends Controller
         ->orderBy('view','desc')
         ->limit(3)
         ->get();
+        for($i = 0; $i < count($songs); $i++){
+            $songs[$i]['singer'] = $songs[$i]->songsingers()->get();
+        }
         return response(['songs' => $songs], 200);
     }
 
@@ -206,4 +209,5 @@ class SongController extends Controller
             return response(['songs' => []], 200);
         }
     }
+
 }

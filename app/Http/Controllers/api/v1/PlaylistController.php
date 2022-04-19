@@ -118,4 +118,14 @@ class PlaylistController extends Controller
         }
     }
 
+    public function getAllNewPlaylistInMonth(){
+        $playlistIds = [2,1,3,1,2];
+        $data = [];
+        foreach($playlistIds as $id){
+            array_push($data, Playlist::find($id));
+        }
+        
+        return response(['playlists' => $data], 200);
+    }
+
 }
