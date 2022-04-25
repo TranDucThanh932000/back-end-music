@@ -10,7 +10,7 @@ class RoomChat extends Model
 {
     // use HasFactory;
 
-    protected $fillable = ['name','description','background_image'];
+    protected $fillable = ['name','description','background_image','youtube_id'];
 
     public function messages(){
         return $this->hasMany(Message::class);

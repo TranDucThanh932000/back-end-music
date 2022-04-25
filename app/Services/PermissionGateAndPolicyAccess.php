@@ -13,6 +13,7 @@ class PermissionGateAndPolicyAccess {
         $this->defineUserPolicy();
         $this->defineSlidePolicy();
         $this->defineSetupAccountPolicy();
+        $this->defineRolePolicy();
     }
 
     public function defineSongPolicy(){
@@ -64,5 +65,12 @@ class PermissionGateAndPolicyAccess {
         Gate::define('edit_setup-account', function(){
             return auth()->user()->checkPermissionAccess('edit_setup-account');
         });
+    }
+
+    public function defineRolePolicy(){
+        Gate::define('list_role', 'App\Policies\RolePolicy@view');
+        Gate::define('add_role', 'App\Policies\RolePolicy@create');
+        Gate::define('edit_role', 'App\Policies\RolePolicy@update');
+        Gate::define('delete_role', 'App\Policies\RolePolicy@delete');
     }
 }

@@ -206,7 +206,11 @@ class SongController extends Controller
             }
             return response(['songs' => $songs], 200);
         }else{
-            return response(['songs' => []], 200);
+            $songs = Song::where('name','Nếu ngày ấy')->get();
+            for($i = 0; $i < count($songs); $i++){
+                $songs[$i]['singer'] = $songs[$i]->songsingers()->get(); 
+            }
+            return response(['songs' => $songs], 200);
         }
     }
 

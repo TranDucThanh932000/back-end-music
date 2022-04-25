@@ -12,6 +12,8 @@ use App\Http\Controllers\api\v1\AlbumController;
 use App\Http\Controllers\api\v1\GenreController;
 use App\Http\Controllers\api\v1\PlaylistController;
 use App\Http\Controllers\api\v1\SlideController;
+use App\Http\Controllers\api\v1\RoleController;
+use App\Http\Controllers\api\v1\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +49,15 @@ Route::prefix('/user')->group( function(){
         Route::get('/get-all-composer', [ComposerController::class,'getAllComposer']);
         Route::get('/{composer_id}', [ComposerController::class,'getComposer']);
         Route::get('/{composer_id}/songs', [ComposerController::class,'getComposerSongs']);
+    });
+    Route::prefix('/role')->group(function(){
+        Route::middleware(['auth:api', 'can:list_role'])->get('/get-role-of-user/{id}', [RoleController::class,'getRoleOfUser']);
+        Route::middleware(['auth:api', 'can:list_role'])->get('/get-all-user-has-role', [RoleController::class,'getAllUserHasRole']);
+        Route::middleware(['auth:api', 'can:list_role'])->get('/get-all-role', [RoleController::class,'getAllRole']);
+        Route::middleware(['auth:api', 'can:list_role'])->get('/get-full-infor-role/{id}', [RoleController::class,'getFullInforRole']);
+        Route::middleware(['auth:api', 'can:list_role'])->post('/store-user-role', [RoleController::class,'createUserRole']);
+        Route::middleware(['auth:api', 'can:add_role'])->post('/store', [RoleController::class,'createRole']);
+        Route::middleware(['auth:api', 'can:edit_role'])->post('/store-edit', [RoleController::class,'updateRole']);
     });
 });
 
@@ -110,3 +121,6 @@ Route::prefix('/public-chat')->group( function(){
     Route::get('/get-rooms', [PublicChatController::class,'getRooms']);
 });
 
+Route::prefix('/permission')->group( function(){
+    Route::middleware('auth:api')->get('/', [PermissionController::class,'getAllPermission']);
+});
