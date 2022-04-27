@@ -31,7 +31,7 @@ use App\Http\Controllers\api\v1\PermissionController;
 // });
 
 Route::prefix('/user')->group( function(){
-    Route::post('/login', [LoginController::class,'login']);
+    Route::post('/login', [LoginController::class,'login'])->middleware("throttle:10,1");
     Route::middleware('auth:api')->get('/checkRole', [UserController::class,'checkRole']);
     Route::middleware('auth:api')->get('/current', [UserController::class,'currentUser']);
     Route::post('/createUser', [UserController::class,'createUser']);

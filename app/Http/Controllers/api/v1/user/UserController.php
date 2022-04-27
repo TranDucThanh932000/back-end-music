@@ -41,9 +41,16 @@ class UserController extends Controller
     public function checkRole(){
         $roles = auth()->user()->roles()->get();
         if(count($roles) != 0){
-            return response(['checkRole' => true]);
+            $permissions = [];
+            for($i = 0; $i < count($roles); $i++){
+                $temp = $roles[$i]->rolepermissions()->get();
+                for($j = 0; $j < count($temp); $j++){
+                    array_push($permissions, $temp[$j]->key_code);
+                }
+            }
+            return response(['permissions' => $permissions], 200);
         }
-        return response(['checkRole' => false]);
+        return response(['permissions' => false], 200);
     }
 
     public function setupAccount(Request $request){
