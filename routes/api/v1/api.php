@@ -14,6 +14,7 @@ use App\Http\Controllers\api\v1\PlaylistController;
 use App\Http\Controllers\api\v1\SlideController;
 use App\Http\Controllers\api\v1\RoleController;
 use App\Http\Controllers\api\v1\PermissionController;
+use App\Http\Controllers\api\v1\MVController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,13 @@ Route::prefix('/song')->group(function(){
     Route::get('/{song_id}', [SongController::class,'getSong']);
     Route::post('/store', [SongController::class,'createSong'])->middleware(['auth:api', 'can:add_song']);
     Route::post('/store-edit', [SongController::class,'editSong'])->middleware(['auth:api', 'can:edit_song']);
+});
+
+Route::prefix('/mv')->group(function(){
+    Route::get('/get-full-infor-mv/{mv_id}', [MvController::class,'getFullInforMV']);
+    Route::get('/get-all-mv', [MvController::class,'getAllMV']);
+    Route::get('/get-list-mv/{id}', [MvController::class,'getListMvOfSinger']);
+    Route::get('/get-by-genre/{id}', [MvController::class,'getByGenre']);
 });
 
 Route::prefix('/album')->group(function(){

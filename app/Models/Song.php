@@ -9,6 +9,7 @@ use App\Models\Genre;
 use App\Models\Singer;
 use App\Models\Composer;
 use App\Models\Album;
+use App\Models\Mv;
 
 class Song extends Model
 {
@@ -32,4 +33,7 @@ class Song extends Model
         return $this->belongsToMany(Album::class,'album_songs')->withTimestamps();
     }
 
+    public function mv(){
+        return $this->hasOne(Mv::class);
+    }
 }
