@@ -42,9 +42,11 @@ Route::prefix('/user')->group( function(){
     Route::middleware(['auth:api', 'can:add_setup-account'])->post('/setup-account', [UserController::class,'setupAccount']);
     Route::prefix('/singer')->group(function(){
         Route::get('/get-all-singer', [SingerController::class,'getAllSinger']);
+        Route::get('/get-singer-by-song/{id}', [SingerController::class,'getSingerBySong']);
+        Route::get('/get-info-singer/{id}', [SingerController::class,'getUserBySinger']);
         Route::get('/{singer_id}', [SingerController::class,'getSinger']);
         Route::get('/{singer_id}/songs', [SingerController::class,'getSingerSongs']);
-        Route::get('/{singer_id}/albums', [SingerController::class,'getSingerAlbums']);
+        Route::get('/{singer_id}/albums', [SingerController::class,'getSingerAlbums']);    
     });
     Route::prefix('/composer')->group(function(){
         Route::get('/get-all-composer', [ComposerController::class,'getAllComposer']);
