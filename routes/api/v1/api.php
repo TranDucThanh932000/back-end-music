@@ -14,7 +14,9 @@ use App\Http\Controllers\api\v1\PlaylistController;
 use App\Http\Controllers\api\v1\SlideController;
 use App\Http\Controllers\api\v1\RoleController;
 use App\Http\Controllers\api\v1\PermissionController;
-use App\Http\Controllers\api\v1\MVController;
+use App\Http\Controllers\api\v1\MvController;
+use App\Http\Controllers\api\v1\PostController;
+use App\Http\Controllers\api\v1\FollowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -133,4 +135,16 @@ Route::prefix('/public-chat')->group( function(){
 
 Route::prefix('/permission')->group( function(){
     Route::middleware('auth:api')->get('/', [PermissionController::class,'getAllPermission']);
+});
+
+Route::prefix('/post')->group(function(){
+    Route::get('/get-all-post', [PostController::class, 'getAllPost']);
+    Route::middleware('auth:api')->post('/like', [PostController::class, 'like']);
+    Route::middleware('auth:api')->post('/unlike', [PostController::class, 'unlike']);
+});
+
+Route::prefix('/following')->group(function(){
+    Route::get('/get-all-following/{id}', [FollowController::class, 'getAllFollowing']);
+    Route::middleware('auth:api')->post('/unfollowing', [FollowController::class, 'unfollowing']);
+    Route::middleware('auth:api')->post('/following', [FollowController::class, 'following']);
 });

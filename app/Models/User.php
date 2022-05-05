@@ -12,6 +12,7 @@ use App\Models\Singer;
 use App\Models\Playlist;
 use App\Models\Justnow;
 use App\Models\Role;
+use App\Models\Follow;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 
@@ -69,6 +70,18 @@ class User extends Authenticatable
             }
         }
         return false;
+    }
+
+    public function posts(){
+        return $this->hasMany(Post::class, 'user_id');
+    }
+
+    public function followers(){
+        return $this->hasMany(Follow::class, 'user_id');
+    }
+
+    public function following(){
+        return $this->hasMany(Follow::class, 'follower');
     }
 
     protected $casts = [
