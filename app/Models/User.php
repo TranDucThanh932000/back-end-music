@@ -13,6 +13,8 @@ use App\Models\Playlist;
 use App\Models\Justnow;
 use App\Models\Role;
 use App\Models\Follow;
+use App\Models\Post;
+use App\Models\Comment;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 
@@ -82,6 +84,10 @@ class User extends Authenticatable
 
     public function following(){
         return $this->hasMany(Follow::class, 'follower');
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class, 'user_id');
     }
 
     protected $casts = [

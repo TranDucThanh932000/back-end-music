@@ -17,6 +17,7 @@ use App\Http\Controllers\api\v1\PermissionController;
 use App\Http\Controllers\api\v1\MvController;
 use App\Http\Controllers\api\v1\PostController;
 use App\Http\Controllers\api\v1\FollowController;
+use App\Http\Controllers\api\v1\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -148,3 +149,8 @@ Route::prefix('/following')->group(function(){
     Route::middleware('auth:api')->post('/unfollowing', [FollowController::class, 'unfollowing']);
     Route::middleware('auth:api')->post('/following', [FollowController::class, 'following']);
 });
+
+Route::prefix('/comment')->group(function(){
+    Route::middleware('auth:api')->post('/', [CommentController::class, 'sendComment']);
+});
+

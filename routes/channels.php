@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Broadcast;
 // });
 
 //cổng này để nhận tin nhắn, bắt sự kiện nhập phím và lượng ra vào
-Broadcast::channel('chat-1', function ($user) {
+Broadcast::channel('chat-{id}', function ($user) {
     if(auth()->check()){
         return $user;
     }else{
@@ -26,7 +26,7 @@ Broadcast::channel('chat-1', function ($user) {
     }
 });
 
-Broadcast::channel('chat-2', function ($user) {
+Broadcast::channel('comment-{id}', function ($user) {
     if(auth()->check()){
         return $user;
     }else{
