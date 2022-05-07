@@ -62,4 +62,51 @@ class PostController extends Controller
             return response(['message' => $e], 400);
         }
     }
+
+    public function editDescription(Request $request){
+        try{
+            DB::beginTransaction();
+            $checkPost = $this->checkAuthor($request->postId);
+            if($checkPost){
+                $checkPost->description = $request->description;
+                $checkPost->save();
+                DB::commit();
+                return response(['message' => 'success'], 200);
+            }
+        }catch(Exception $e){
+            DB::rollBack();
+            return response(['message' => $e], 400);
+        }
+
+        
+    }
+
+    public function delete(Request $request){
+        try{
+            DB::beginTransaction();
+            $checkPost = $this->checkAuthor($request->postId);
+            if($checkPost){
+                $checkPost->delete();
+                DB::commit();
+                return response(['message' => 'success'], 200);
+            }
+        }catch(Exception $e){
+            DB::rollBack();
+            return response(['message' => $e], 400);
+        } 
+    }
+
+    public function checkAuthor($postId){
+        try{
+            $user = auth()->user();
+            //Check xem user này có phải chủ bài đăng này không
+            $checkPost = Post::select('*')->where([
+                'id' => $postId,
+                'user_id' => $user->id
+            ])->first();
+            return $checkPost;
+        }catch(Exception $e){
+            return null;
+        }
+    }
 }
