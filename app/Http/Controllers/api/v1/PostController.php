@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Content;
 use App\Models\Post;
 use App\Models\Postlike;
 use Exception;
@@ -11,8 +12,13 @@ use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
-    public function getAllPost(){
-        $getPosts = Post::all();
+
+    public function getPostByPage(Request $request){
+        $getPosts = Post::select('*')
+        ->orderBy('created_at', 'desc')
+        ->skip(($request->numberPage - 1) * $request->numberOfPost)
+        ->limit($request->numberOfPost)
+        ->get();
         $posts = [];
         for($i = 0; $i < count($getPosts); $i++){
             $post = $getPosts[$i];
@@ -107,6 +113,29 @@ class PostController extends Controller
             return $checkPost;
         }catch(Exception $e){
             return null;
+        }
+    }
+
+    public function createPost(Request $request){
+        try{
+            DB::beginTransaction();
+            $user = auth()->user();
+            $post = Post::create([
+                'description' => $request->description,
+                'user_id' => $user->id
+            ]);
+            Content::create([
+                'link' => $request->linkImg,
+                'type' => 'image',
+                'post_id' => $post->id
+            ]);
+            DB::commit();
+            return response([
+                'message' => 'success',
+            ], 200);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response(['message' => $e], 400);
         }
     }
 }

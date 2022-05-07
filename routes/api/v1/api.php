@@ -139,7 +139,8 @@ Route::prefix('/permission')->group( function(){
 });
 
 Route::prefix('/post')->group(function(){
-    Route::get('/get-all-post', [PostController::class, 'getAllPost']);
+    Route::get('/page/{numberPage}/number-of-post/{numberOfPost}', [PostController::class, 'getPostByPage']);
+    Route::middleware('auth:api')->post('/store', [PostController::class, 'createPost']);
     Route::middleware('auth:api')->post('/edit-description', [PostController::class, 'editDescription']);
     Route::middleware('auth:api')->post('/delete', [PostController::class, 'delete']);
     Route::middleware('auth:api')->post('/like', [PostController::class, 'like']);

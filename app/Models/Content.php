@@ -9,6 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Content extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['content', 'post_id','user_id'];
+    protected $fillable = ['post_id','type', 'link'];
     protected $softDelete = ['deleted_at'];
 }
