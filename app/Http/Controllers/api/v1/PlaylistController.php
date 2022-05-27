@@ -128,4 +128,8 @@ class PlaylistController extends Controller
         return response(['playlists' => $data], 200);
     }
 
+    public function getPlayListHub(){
+        
+    }
+
 }

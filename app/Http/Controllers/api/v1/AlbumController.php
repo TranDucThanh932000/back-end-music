@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Album;
+use App\Models\Genre;
 use App\Models\Singer;
 use App\Models\Song;
 use Exception;
@@ -88,5 +89,36 @@ class AlbumController extends Controller
             $singers[$id] = Singer::find($id);
         }
         return response(['albumSingers' => $singers], 200);
+    }
+
+    public function getFullInforAllAlbum(){
+        try{
+            $genres = Genre::all();
+            $data = [];
+            for($i = 0; $i < count($genres); $i++){
+                $temp = $genres[$i]->genresongs()->get(); 
+                for($j = 0; $j < count($temp); $j++){
+                    $singers = $temp[$j]->songsingers()->get();
+                    for($k = 0; $k < count($singers); $k++){
+                        $temp2['img'] = $singers[$k]->user()->first()->avatar;
+                        $temp2['nickname'] = $singers[$k]->nickname;
+                        $temp2['singer_id'] = $singers[$k]->id;
+                        $temp2['genre_id'] = $genres[$i]->id;
+                        $data[$genres[$i]->name][$singers[$k]->id] = $temp2;
+                    }
+                }
+            }
+    
+            return response([
+                'status' => 200,
+                'message' => 'success',
+                'data' => $data
+            ], 200);
+        }catch(Exception $e){
+            return response([
+                'status' => 500,
+                'message' => $e
+            ], 200);
+        }
     }
 }

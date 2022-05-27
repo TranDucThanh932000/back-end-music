@@ -44,6 +44,7 @@ Route::prefix('/user')->group( function(){
     Route::get('/already-singer-composer/{userId}', [UserController::class,'getAlreadySingerComposer']);
     Route::middleware(['auth:api', 'can:add_setup-account'])->post('/setup-account', [UserController::class,'setupAccount']);
     Route::prefix('/singer')->group(function(){
+        Route::get('/get-image-hub', [SingerController::class,'getImageHub']);
         Route::get('/get-all-singer', [SingerController::class,'getAllSinger']);
         Route::get('/get-singer-by-song/{id}', [SingerController::class,'getSingerBySong']);
         Route::get('/get-info-singer/{id}', [SingerController::class,'getUserBySinger']);
@@ -73,6 +74,7 @@ Route::prefix('/song')->group(function(){
     Route::get('/get-all-song-album/{albumId}', [SongController::class,'getAllSongInAlbum']);
     Route::get('/get-all-song-playlist/{playlistId}', [SongController::class,'getAllSongInPlaylist']);
     Route::get('/get-top3', [SongController::class,'getTopThree']);
+    Route::get('/get-song-by-genre/{genre_id}/singer/{singer_id}', [SongController::class,'getSongByGenreAndSinger']);
     Route::get('/get-top100', [SongController::class,'getTop100']);
     Route::get('/get-top5-all-genre', [SongController::class,'getTop5AllGenre']);
     Route::get('/get-top-new-songs', [SongController::class,'getTopNewSongs']);
@@ -92,6 +94,7 @@ Route::prefix('/mv')->group(function(){
 
 Route::prefix('/album')->group(function(){
     Route::get('/get-all-album', [AlbumController::class,'getAllAlbum']);
+    Route::get('/get-full-info-album', [AlbumController::class,'getFullInforAllAlbum']);
     Route::get('/get-full-infor-album/{albumId}', [AlbumController::class,'getFullInforAlbum']);
     Route::get('/{album_id}', [AlbumController::class,'getAlbum']);
     Route::get('/{album_id}/songs', [AlbumController::class,'getAlbumSongs']);
@@ -109,6 +112,7 @@ Route::prefix('/genre')->group(function(){
 
 Route::prefix('/playlist')->group( function(){
     Route::get('/get-corner', [PlaylistController::class,'getCornerPlaylist']);
+    Route::get('/get-playlist-hub', [PlaylistController::class, 'getPlayListHub']);
     Route::get('/get-all-new-playlist-in-month', [PlaylistController::class,'getAllNewPlaylistInMonth']);
     Route::middleware('auth:api')->get('/get-all-playlist-user', [PlaylistController::class,'getAllPlaylistUser']);
     Route::get('/get-top-five-selected-today', [PlaylistController::class,'getTopFivePlaylist']);

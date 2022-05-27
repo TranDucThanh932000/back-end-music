@@ -12,6 +12,7 @@ use App\Models\Song;
 use App\Models\Album;
 use App\Models\Genre;
 use App\Models\Playlist;
+use App\Models\Singer;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -211,6 +212,32 @@ class SongController extends Controller
                 $songs[$i]['singer'] = $songs[$i]->songsingers()->get(); 
             }
             return response(['songs' => $songs], 200);
+        }
+    }
+
+    public function getSongByGenreAndSinger(Request $request){
+        try{
+            $data = [];
+            $songsOfSinger = Singer::where('id', $request->singer_id)->first()->singersongs()->get();
+            foreach($songsOfSinger as $song){
+                $genres =  $song->songgenres()->get();
+                foreach($genres as $genre){
+                    if($genre->id == $request->genre_id){
+                        array_push($data, $song);
+                    }
+                }
+            }
+
+            return response([
+                'status' => 200,
+                'message' => 'success',
+                'data' => $data
+            ], 200);
+        }catch(Exception $e){
+            return response([
+                'status' => 500,
+                'message' => $e
+            ], 200);
         }
     }
 

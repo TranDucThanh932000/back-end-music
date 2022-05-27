@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Singer;
 use App\Models\Song;
 use App\Models\User;
+use Exception;
 
 class SingerController extends Controller
 {
@@ -38,5 +39,23 @@ class SingerController extends Controller
     public function getSingerBySong(Request $request){
         $singers = Song::find($request->id)->songsingers()->get();
         return response(['singers' => $singers], 200);
+    }
+
+    public function getImageHub(){
+        try{
+            $data = [];
+            
+
+            return response([
+                'status' => 200,
+                'message' => 'success',
+                'data' => $data
+            ], 200);
+        }catch(Exception $e){
+            return response([
+                'status' => 500,
+                'message' => $e
+            ], 200);
+        }
     }
 }
