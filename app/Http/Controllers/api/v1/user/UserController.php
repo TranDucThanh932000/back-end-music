@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Jobs\PutFile;
 use App\Models\Composer;
 use App\Models\Singer;
+use App\Models\Song;
+use App\Models\Songlike;
 use Illuminate\Support\Facades\Artisan;
 
 class UserController extends Controller
@@ -176,6 +178,99 @@ class UserController extends Controller
 
         } catch (Exception $exc) {
             return response(['message' => $validator->fails()]);
+        }
+    }
+
+    public function getAllLikeOfSongs(){
+        try{
+            $user = auth()->user();
+            $songs = $user->songlikes()->get();
+            $data = [];
+            foreach($songs as $song){
+                $song = Song::find($song->song_id);
+                $song['singers'] = $song->songsingers()->get();
+                array_push($data, $song);
+            }
+    
+            return response([
+                'status' => 200,
+                'message' => 'success',
+                'data' => $data
+            ], 200);
+        }catch(Exception $e){
+            return response([
+                'status' => 500,
+                'message' => $e
+            ], 500);
+        }
+    }
+
+    public function unlikeSong(Request $request){
+        try{
+            DB::beginTransaction();
+            $user = auth()->user();
+            Songlike::where([
+                'song_id' => $request->songId,
+                'user_id' => $user->id
+            ])->delete();
+            DB::commit();
+            return response([
+                'status' => 200,
+                'message' => 'success'
+            ], 200);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response([
+                'status' => 500,
+                'message' => $e
+            ], 500);
+        }
+    }
+
+    public function likeSong(Request $request){
+        try{
+            DB::beginTransaction();
+            $user = auth()->user();
+            Songlike::create([
+                'song_id' => $request->songId,
+                'user_id' => $user->id
+            ]);
+            DB::commit();
+            return response([
+                'status' => 200,
+                'message' => 'success'
+            ], 200);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response([
+                'status' => 500,
+                'message' => $e
+            ], 500);
+        }
+    }
+
+    public function checkLikedSong(Request $request){
+        try{
+            $user = auth()->user();
+            $data = Songlike::where([
+                'song_id' => $request->songId,
+                'user_id' => $user->id
+            ])->get();
+            if(count($data) != 0){
+                return response([
+                    'status' => 200,
+                    'message' => 'like'
+                ], 200);
+            }
+            return response([
+                'status' => 200,
+                'message' => 'notyet'
+            ], 200);
+        }catch(Exception $e){
+            return response([
+                'status' => 500,
+                'message' => $e
+            ], 500);
         }
     }
 }

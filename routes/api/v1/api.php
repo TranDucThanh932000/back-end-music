@@ -35,6 +35,10 @@ use App\Http\Controllers\api\v1\CommentController;
 // });
 
 Route::prefix('/user')->group( function(){
+    Route::middleware('auth:api')->get('/get-all-like-of-songs', [UserController::class,'getAllLikeOfSongs']);
+    Route::middleware('auth:api')->post('/like-song', [UserController::class,'likeSong']);
+    Route::middleware('auth:api')->post('/unlike-song', [UserController::class,'unlikeSong']);
+    Route::middleware('auth:api')->get('/check-like-song', [UserController::class,'checkLikedSong']);
     Route::post('/login', [LoginController::class,'login'])->middleware("throttle:10,1");
     Route::middleware('auth:api')->get('/checkRole', [UserController::class,'checkRole']);
     Route::middleware('auth:api')->get('/current', [UserController::class,'currentUser']);

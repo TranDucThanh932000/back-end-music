@@ -118,7 +118,7 @@ class AlbumController extends Controller
             return response([
                 'status' => 500,
                 'message' => $e
-            ], 200);
+            ], 500);
         }
     }
 }
